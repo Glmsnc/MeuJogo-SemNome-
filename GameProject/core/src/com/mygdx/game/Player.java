@@ -39,17 +39,25 @@ public class Player {
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
 			pos.x -= velocidade*Gdx.graphics.getDeltaTime();
+			estadoAtual = ESTADO_PLAYER.CORRENDO;
 			
 		}
 		if(Gdx.input.isKeyPressed(Keys.S)) {
 			pos.y -= velocidade*Gdx.graphics.getDeltaTime();
+			estadoAtual = ESTADO_PLAYER.CORRENDO;
 			
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
 			pos.x += velocidade*Gdx.graphics.getDeltaTime();
+			estadoAtual = ESTADO_PLAYER.CORRENDO;
 			
 		}
+		if(Gdx.input.isKeyPressed(Keys.SPACE)){
+			
+		}
+		
+		estadoAtual = ESTADO_PLAYER.PARADO;
 	}
 
 }

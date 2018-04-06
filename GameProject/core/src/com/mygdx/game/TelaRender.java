@@ -19,7 +19,7 @@ public class TelaRender {
 	
 	OrthographicCamera camera;
 	SpriteCache cache;
-	SpriteBatch batch = new SpriteBatch(5460);
+	SpriteBatch batch = new SpriteBatch();
 	Player player;
 	BitmapFont font = new BitmapFont();
 	static int cont= 0;
@@ -27,7 +27,7 @@ public class TelaRender {
 	Animation<TextureRegion> playerRight;
 	
 	public TelaRender() {
-		player = new Player(50, 50);
+		player = new Player(400, 240);
 		/*this.cam = new OrthographicCamera(24,16);
 		this.cam.position.set(player.pos.x, player.pos.y, 0);*/
 	}
@@ -35,15 +35,15 @@ public class TelaRender {
 
 	public void createRender(){
 		
-		Texture bobTexture = new Texture(Gdx.files.internal("spriteSheetLink.png"));
-		TextureRegion[] split = new TextureRegion(bobTexture).split(17, 17)[0];
-		TextureRegion[] mirror = new TextureRegion(bobTexture).split(17, 17)[0];
+		Texture bobTexture = new Texture(Gdx.files.internal("bob.png"));
+		TextureRegion[] split = new TextureRegion(bobTexture).split(19, 19)[0];
+		TextureRegion[] mirror = new TextureRegion(bobTexture).split(19, 19)[0];
 		//inverte o sprite
 		for (TextureRegion region : mirror)
 			region.flip(true, false);
 		//spikes = split[5];
-		playerLeft = new Animation(0.3f, mirror[9], mirror[10], mirror[11], mirror[12], mirror[13]);
-		playerRight = new Animation(0.3f, split[9], split[10], split[11], split[12], split[13]);
+		playerLeft =  new Animation(0.1f, mirror[0], mirror[1]);
+		playerRight = new Animation(0.1f, split[0], split[1]);
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 
@@ -64,7 +64,7 @@ public class TelaRender {
 	
 	   
 	public void playerRender() {
-		Animation<TextureRegion> anim = null;
+		Animation<TextureRegion> anim = playerLeft;
 		
 		cont++;
 		if(cont >= 16) {
@@ -72,7 +72,7 @@ public class TelaRender {
 		}
 		boolean loop = true;
 		player.update();
-		if( Gdx.input.isKeyPressed(Keys.A)  || player.estadoAtual == ESTADO_PLAYER.PARADO) {
+		if( Gdx.input.isKeyPressed(Keys.A)  || player.estadoAtual == ESTADO_PLAYER.CORRENDO) {
 			anim  = playerLeft;
 		}
 		
@@ -82,7 +82,7 @@ public class TelaRender {
 					
 			
 		}
-		batch.draw(anim.getKeyFrame(cont, true), player.pos.x, player.pos.y, 128, 128);
+		batch.draw(anim.getKeyFrame(cont, true), player.pos.x, player.pos.y, 32, 32);
 		font.draw(batch, "contador"+cont, 400,400);
 	}
 	}
