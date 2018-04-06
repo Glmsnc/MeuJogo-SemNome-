@@ -10,18 +10,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class MyGdxGame extends Game {
 	SpriteBatch batch;
 	Texture img;
-	TelaRender render;
-	
+	TelaRender renderer;
+	Player player;
 	@Override
 	public void create () {
-		render = new TelaRender();
+		player = new Player(50, 50);
+		renderer = new TelaRender();
 		batch = new SpriteBatch();
+		renderer.createRender();
 		//img = new Texture("badlogic.jpg");
 	}
 	
 	@Override
 	public void render() {
-		render.render();
+		player.update();
+		renderer.render();
+		
+		
+		
 	}
 
 	
