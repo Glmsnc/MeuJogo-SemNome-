@@ -12,6 +12,7 @@ public class MyGdxGame extends Game {
 	Texture img;
 	TelaRender renderer;
 	Player player;
+	
 	@Override
 	public void create () {
 		player = new Player(50, 50);

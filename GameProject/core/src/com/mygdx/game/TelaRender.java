@@ -21,13 +21,16 @@ public class TelaRender {
 	SpriteCache cache;
 	SpriteBatch batch = new SpriteBatch();
 	Player player;
+	Enemy enemy;
 	BitmapFont font = new BitmapFont();
 	static int cont= 0;
 	Animation<TextureRegion> playerLeft;
 	Animation<TextureRegion> playerRight;
+	Animation<TextureRegion> playerIdle;
 	
 	public TelaRender() {
 		player = new Player(400, 240);
+		enemy = new Enemy (240,350);
 		/*this.cam = new OrthographicCamera(24,16);
 		this.cam.position.set(player.pos.x, player.pos.y, 0);*/
 	}
@@ -43,6 +46,7 @@ public class TelaRender {
 			region.flip(true, false);
 		//spikes = split[5];
 		playerLeft =  new Animation(0.1f, mirror[0], mirror[1]);
+		playerIdle =  new Animation(0.1f, mirror[3], mirror[4]);
 		playerRight = new Animation(0.1f, split[0], split[1]);
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
@@ -53,10 +57,11 @@ public class TelaRender {
 	
 	
 	public void render() {
-		 camera.update();
-		 batch.setProjectionMatrix(camera.combined);
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		playerRender();
+		enemyRender();
 		batch.end();
 
 
@@ -64,26 +69,46 @@ public class TelaRender {
 	
 	   
 	public void playerRender() {
-		Animation<TextureRegion> anim = playerLeft;
-		
+		Animation<TextureRegion> anim = playerIdle;	
 		cont++;
 		if(cont >= 16) {
 			cont =0;
 		}
-		boolean loop = true;
+		
 		player.update();
-		if( Gdx.input.isKeyPressed(Keys.A)  || player.estadoAtual == ESTADO_PLAYER.CORRENDO) {
+		if( player.dir == DIRECAO.ESQUERDA) {
+			//player.estadoAtual = ESTADO_ACTORS.CORRENDO;
 			anim  = playerLeft;
 		}
 		
-		if(Gdx.input.isKeyPressed(Keys.D)  || player.estadoAtual == ESTADO_PLAYER.CORRENDO){
-			player.estadoAtual = ESTADO_PLAYER.CORRENDO;
+		if(player.dir == DIRECAO.DIREITA){
+			//player.estadoAtual = ESTADO_ACTORS.CORRENDO;
 			anim =playerRight;
 					
 			
 		}
 		batch.draw(anim.getKeyFrame(cont, true), player.pos.x, player.pos.y, 32, 32);
-		font.draw(batch, "contador"+cont, 400,400);
+		font.draw(batch,""+player.estadoAtual	, 400,400 );
+		
 	}
+	
+	
+	public void enemyRender() {
+		
+		
+		Animation<TextureRegion> anim = playerLeft;
+		boolean loop = true;
+		enemy.update(player);
+		cont++;
+		if(cont >= 16) {
+			cont =0;
+		}
+		if(enemy.estadoAtual != ESTADO_ACTORS.MORTO)
+			batch.draw(anim.getKeyFrame(1), enemy.pos.x, enemy.pos.y, 32, 32);
+		
+		
+		
+		
 	}
+}
 
