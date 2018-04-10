@@ -2,14 +2,17 @@ package com.mygdx.game;
 
 public enum DIRECAO {
 
-	 BAIXO(0), CIMA(1), DIREITA(2), ESQUERDA(3);
-	 final int i;
-	 DIRECAO(int i) {
-		 this.i = i;
+	 BAIXO(false), CIMA(false), DIREITA(false), ESQUERDA(false);
+	 boolean v;
+	 DIRECAO(boolean v) {
+		 this.v = v;
 		
 	}
 	 
-	 public final int getID() {
-		 return this.i;
+	 public final boolean getID() {
+		 return this.v;
+	 }
+	 public void set(boolean v) {
+		 this.v = v;
 	 }
 }

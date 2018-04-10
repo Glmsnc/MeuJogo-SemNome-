@@ -26,7 +26,7 @@ public class Player {
 	Vector2 accel = new Vector2();
 	Vector2 vel = new Vector2();
 	long time = 0;
-	
+	DIRECAO BAIXO = dir.BAIXO, CIMA = dir.CIMA, ESQUERDA = dir.ESQUERDA, DIREITA = dir.DIREITA;
 	
 	public Player(float x, float y) {
 		this.body.x = this.pos.x = x;
@@ -39,21 +39,34 @@ public class Player {
 	public void update() {
 		checkKeys();
 		Gdx.input.setInputProcessor(createInputAdapter());
+		System.out.println(DIREITA.v +" "+ ESQUERDA.v +" "+ CIMA.v+" "+ BAIXO.v);
+		boolean teste = (DIREITA.v || ESQUERDA.v) || (CIMA.v || BAIXO.v);
+		if(!teste) {
+			this.estadoAtual = ESTADO_ACTORS.PARADO;
+		}
 	}
 	public void checkKeys() {
 	if(this.estadoAtual != ESTADO_ACTORS.MORTO) {
 		if(Gdx.input.isKeyPressed(Keys.W)) {
 			dir = direcao(dir.CIMA);
+		}else {
+			CIMA.v = false;
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
 			dir = direcao(dir.ESQUERDA);	
+		}else {
+			ESQUERDA.v = false;
 		}
 		if(Gdx.input.isKeyPressed(Keys.S)) {
 			dir = direcao(dir.BAIXO);	
+		}else {
+			BAIXO.v = false;
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.D)) {
 			dir = direcao(dir.DIREITA);	
+		}else {
+			DIREITA.v = false;
 		}
 		
 	}
@@ -61,19 +74,32 @@ public class Player {
 
 
 
-		 //velocidade = 200;
+		 velocidade = 200;
 		this.body.x = this.pos.x;
 		this.body.y = this.pos.y;
 		//if(!Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) this.estadoAtual = ESTADO_ACTORS.PARADO;
 	}
 	
 	public void dash(){
-		
-		
-		
+		this.estadoAtual = ESTADO_ACTORS.CORRENDO;
+		velocidade = 400;
+		for(int i = 0; i<5; i++) {
+		if(DIREITA.v) {
+			direcao(DIREITA);
+		}
+		if(ESQUERDA.v) {
+			direcao(ESQUERDA);
+		}
+		if(CIMA.v) {
+			direcao(CIMA);
+		}
+		if(BAIXO.v) {
+			direcao(BAIXO);
+		}
+		}
 	}
 	
-	public static InputAdapter createInputAdapter() {
+	public InputAdapter createInputAdapter() {
 		InputAdapter tsAdapter = new InputAdapter();
 	
 		return new InputAdapter() {
@@ -85,7 +111,7 @@ public class Player {
 			
 			@Override
 			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-				System.out.println("X: "+ screenX+" Y: "+screenY+" p"+pointer+" b"+button);
+				dash();
 				return super.touchUp(screenX, screenY, pointer, button);
 			}
 			
@@ -96,18 +122,21 @@ public class Player {
 	}
 	
 	public DIRECAO direcao(DIRECAO dir) {
-		
-		switch(dir) {
+	switch(dir) {
 		case BAIXO:
+			BAIXO.v = true; CIMA.v = false;
 			this.pos.y -= velocidade*Gdx.graphics.getDeltaTime();
 			break;
 		case CIMA:
+			CIMA.v = true; BAIXO.v = false;
 			this.pos.y += velocidade*Gdx.graphics.getDeltaTime();
 			break;
 		case ESQUERDA:
+			ESQUERDA.v = true; DIREITA.v = false;
 			this.pos.x -= velocidade*Gdx.graphics.getDeltaTime();
 			break;
 		case DIREITA:
+			DIREITA.v = true; ESQUERDA.v = false;
 			this.pos.x += velocidade*Gdx.graphics.getDeltaTime();
 			break;
 		}
