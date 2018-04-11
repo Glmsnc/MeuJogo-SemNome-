@@ -23,10 +23,11 @@ public class Player {
 	DIRECAO dir;
 	Rectangle body = new Rectangle();
 	Vector2 pos = new Vector2();
-	Vector2 accel = new Vector2();
+	Vector2 raiz = new Vector2();
 	Vector2 vel = new Vector2();
 	long time = 0;
 	DIRECAO BAIXO = dir.BAIXO, CIMA = dir.CIMA, ESQUERDA = dir.ESQUERDA, DIREITA = dir.DIREITA;
+	DIRECAO dAnt = null;
 	
 	public Player(float x, float y) {
 		this.body.x = this.pos.x = x;
@@ -39,7 +40,7 @@ public class Player {
 	public void update() {
 		checkKeys();
 		Gdx.input.setInputProcessor(createInputAdapter());
-		System.out.println(DIREITA.v +" "+ ESQUERDA.v +" "+ CIMA.v+" "+ BAIXO.v);
+		
 		boolean teste = (DIREITA.v || ESQUERDA.v) || (CIMA.v || BAIXO.v);
 		if(!teste) {
 			this.estadoAtual = ESTADO_ACTORS.PARADO;
@@ -50,31 +51,28 @@ public class Player {
 		if(Gdx.input.isKeyPressed(Keys.W)) {
 			dir = direcao(dir.CIMA);
 		}else {
-			CIMA.v = false;
+			//CIMA.v = false;
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
 			dir = direcao(dir.ESQUERDA);	
 		}else {
-			ESQUERDA.v = false;
+			//ESQUERDA.v = false;
 		}
 		if(Gdx.input.isKeyPressed(Keys.S)) {
 			dir = direcao(dir.BAIXO);	
 		}else {
-			BAIXO.v = false;
+			//BAIXO.v = false;
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.D)) {
 			dir = direcao(dir.DIREITA);	
 		}else {
-			DIREITA.v = false;
+			//DIREITA.v = false;
 		}
 		
 	}
 	
-
-
-
-		 velocidade = 200;
+		velocidade = 200;
 		this.body.x = this.pos.x;
 		this.body.y = this.pos.y;
 		//if(!Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) this.estadoAtual = ESTADO_ACTORS.PARADO;
@@ -83,7 +81,7 @@ public class Player {
 	public void dash(){
 		this.estadoAtual = ESTADO_ACTORS.CORRENDO;
 		velocidade = 400;
-		for(int i = 0; i<5; i++) {
+		for(int i = 0; i<15; i++) {
 		if(DIREITA.v) {
 			direcao(DIREITA);
 		}
@@ -100,24 +98,42 @@ public class Player {
 	}
 	
 	public InputAdapter createInputAdapter() {
-		InputAdapter tsAdapter = new InputAdapter();
 	
 		return new InputAdapter() {
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				System.out.println("X: "+ screenX+" Y: "+screenY);
+				raiz.x = screenX;
+				raiz.y = screenY;
+				System.out.println("Entrando");
 				return super.touchDown(screenX, screenY, pointer, button);
 			}
 			
 			@Override
 			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 				dash();
+				System.out.println("Saindo");
 				return super.touchUp(screenX, screenY, pointer, button);
+			}
+
+			@Override
+			public boolean touchDragged(int screenX, int screenY, int pointer) {
+				if(raiz.y > screenY) dir = direcao(dir.CIMA);
+				if(raiz.y < screenY) dir = direcao(dir.BAIXO);
+				if(raiz.x > screenX) dir = direcao(dir.DIREITA);
+				if(raiz.x < screenX) dir = direcao(dir.ESQUERDA);
+				if(raiz.x <5+screenX );
+				return super.touchDragged(screenX, screenY, pointer);
 			}
 			
 			
-			
 		};
+		
+	}
+	public void raizBackup() {
+		
+	}
+	
+	public void zeraControle() {
 		
 	}
 	
