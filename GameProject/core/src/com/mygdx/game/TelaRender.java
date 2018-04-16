@@ -27,7 +27,7 @@ public class TelaRender {
 	Animation<TextureRegion> playerLeft;
 	Animation<TextureRegion> playerRight;
 	Animation<TextureRegion> playerIdle;
-	
+	Texture ctrl;
 	public TelaRender() {
 		player = new Player(400, 240);
 		enemy = new Enemy (240,350);
@@ -37,7 +37,7 @@ public class TelaRender {
 
 
 	public void createRender(){
-		
+		ctrl = new Texture(Gdx.files.internal("circlecontrol.png"));
 		Texture bobTexture = new Texture(Gdx.files.internal("bob.png"));
 		TextureRegion[] split = new TextureRegion(bobTexture).split(19, 19)[0];
 		TextureRegion[] mirror = new TextureRegion(bobTexture).split(19, 19)[0];
@@ -48,8 +48,8 @@ public class TelaRender {
 		playerLeft =  new Animation(0.1f, mirror[0], mirror[1]);
 		playerIdle =  new Animation(0.1f, mirror[3], mirror[4]);
 		playerRight = new Animation(0.1f, split[0], split[1]);
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+		//camera = new OrthographicCamera();
+		//camera.setToOrtho(true, 800, 480);
 
 		
 	
@@ -57,11 +57,12 @@ public class TelaRender {
 	
 	
 	public void render() {
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
+		//camera.update();
+		//batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		playerRender();
 		enemyRender();
+		controlRender();
 		batch.end();
 
 
@@ -76,12 +77,12 @@ public class TelaRender {
 		}
 		
 		player.update();
-		if( player.dir == DIRECAO.ESQUERDA) {
+		if( player.dirX == DIRECAO.ESQUERDA) {
 			//player.estadoAtual = ESTADO_ACTORS.CORRENDO;
 			anim  = playerLeft;
 		}
 		
-		if(player.dir == DIRECAO.DIREITA){
+		if(player.dirX == DIRECAO.DIREITA){
 			//player.estadoAtual = ESTADO_ACTORS.CORRENDO;
 			anim =playerRight;
 					
@@ -105,10 +106,15 @@ public class TelaRender {
 		}
 		if(enemy.estadoAtual != ESTADO_ACTORS.MORTO)
 			batch.draw(anim.getKeyFrame(1), enemy.pos.x, enemy.pos.y, 32, 32);
-		
-		
-		
+
 		
 	}
-}
+	
+	public void controlRender() {
+		if(Gdx.input.isTouched()) {
+		batch.draw(ctrl, player.raiz.x-20, player.raiz.y-20, 40,40);
+		}
+	}
+	
+	}
 
